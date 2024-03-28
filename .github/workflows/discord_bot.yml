@@ -1,4 +1,4 @@
-name: Discord Notifier
+name: Discord Bot
 
 on:
   workflow_dispatch:
