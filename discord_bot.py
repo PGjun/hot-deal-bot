@@ -23,9 +23,9 @@ def check_new_posts_and_log():
 
     soup = BeautifulSoup(response.text, 'html.parser')
     posts = soup.find_all(class_='market-info-list')
-
-    new_content_found = False
-    for post in posts:
+    
+    # 게시물 리스트를 역순으로 순회하여 최신 게시물이 마지막에 처리되도록 합니다.
+    for post in reversed(posts):
         # 제목 추출
         title_element = post.select_one('.ellipsis-with-reply-cnt')
         if not title_element:
@@ -46,7 +46,6 @@ def check_new_posts_and_log():
         # 중복 검사
         if post_id in known_content:
             continue
-        new_content_found = True
         known_content.add(post_id)
 
         # Discord에 메시지 전송
@@ -69,7 +68,7 @@ def check_new_posts_and_log():
             print(f"Failed to send message to Discord: HTTP {result.status_code}")
 
     # 로그 파일 업데이트
-    if new_content_found:
+    if known_content:
         with open(log_file_path, 'w') as file:
             for content in known_content:
                 file.write(content + '\n')
