@@ -11,6 +11,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: true # 기본값이지만, 명시적으로 설정
+          fetch-depth: 0 # 변경사항 푸시를 위해 전체 기록을 가져옵니다.
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -33,5 +36,4 @@ jobs:
         with:
           commit_message: Automated update
           branch: master
-          push_options: '--force'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          push_options: '--force' # 이 옵션은 필요에 따라 조정하세요.
