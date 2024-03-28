@@ -2,6 +2,8 @@ name: Discord Bot
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *' # 이 줄이 5분마다 실행을 설정합니다.
 
 jobs:
   notify:
@@ -18,13 +20,20 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install discord.py requests beautifulsoup4 asyncio
-
-      - name: List files
-        run: ls -la
+          pip install discord.py requests beautifulsoup4
 
       - name: Run bot
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python discord_bot.py
+
+      - name: Commit and Push content list
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add content_list.txt
+          git commit -m "Update content list" -a || echo "No changes to commit"
+          git push
