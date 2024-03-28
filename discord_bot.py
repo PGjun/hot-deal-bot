@@ -1,6 +1,7 @@
 import requests
 import os
 from bs4 import BeautifulSoup
+import time
 
 # 환경 변수에서 필요한 값들을 가져옵니다.
 DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
@@ -65,8 +66,15 @@ def check_new_posts_and_log():
         payload = {"embeds": [embed]}
         result = requests.post(DISCORD_WEBHOOK_URL, json=payload, headers=headers)
         print(f"Discord webhook response: HTTP {result.status_code}, Body: {result.text}")
-        if result.status_code != 204:
+        if result.status_code == 429:  # Rate limit detected
+            retry_after = result.json().get("retry_after", 0.3)  # Use default 0.3s if retry_after is missing
+            print(f"Rate limited. Retrying after {retry_after} seconds.")
+            time.sleep(retry_after)
+        # Optionally, you could implement a retry mechanism here.
+        elif result.status_code != 204:
             print(f"Failed to send message to Discord: HTTP {result.status_code}")
+
+        time.sleep(0.3)  # 요청 사이에 0.3초 대기
 
     # 로그 파일 업데이트
     if known_content:
