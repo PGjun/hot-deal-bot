@@ -64,6 +64,7 @@ def check_new_posts_and_log():
         headers = {'Content-Type': 'application/json'}
         payload = {"embeds": [embed]}
         result = requests.post(DISCORD_WEBHOOK_URL, json=payload, headers=headers)
+        print(f"Discord webhook response: HTTP {result.status_code}, Body: {result.text}")
         if result.status_code != 204:
             print(f"Failed to send message to Discord: HTTP {result.status_code}")
 
