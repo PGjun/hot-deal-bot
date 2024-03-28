@@ -36,8 +36,25 @@ async def check_new_posts_and_log():
     for post in posts:
         post_title = post.text.strip()
         if post_title not in known_content:
-            requests.post(DISCORD_WEBHOOK_URL, json={"content": f"새 글 알림: {post_title}"})
-            known_content.append(post_title)
+            # Embed 형태로 메시지 데이터를 구성합니다.
+            embed = {
+                "title": "🔥 새로운 핫딜 🔥",
+                "description": post_title,
+                "color": 0xFF0000,
+                "fields": [
+                    {
+                        "name": "링크",
+                        "value": url,
+                        "inline": True
+                    }
+                ]
+            }
+            # Discord 웹훅 URL로 POST 요청을 보냅니다.
+            headers = {'Content-Type': 'application/json'}
+            payload = {"embeds": [embed]}
+            response = requests.post(DISCORD_WEBHOOK_URL, json=payload, headers=headers)
+            if response.status_code == 204:
+                known_content.append(post_title)
 
     # 파일을 업데이트합니다.
     with open(log_file_path, 'w') as file:
