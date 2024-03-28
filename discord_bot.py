@@ -56,7 +56,7 @@ def check_new_posts_and_log():
             "color": 0xFF0000,
             "fields": [
                 {
-                    "name": "링크",
+                    "name": "",
                     "value": post_url,
                     "inline": True
                 }
