@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3 # 최신 버전으로 변경
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3 # 최신 버전으로 변경
         with:
-          python-version: '3.9'
+          python-version: '3.12.2' # 파이썬 버전을 3.12.2로 변경
 
       - name: Install dependencies
         run: |
