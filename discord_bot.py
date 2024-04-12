@@ -27,6 +27,12 @@ def check_new_posts_and_log():
     
     # 게시물 리스트를 역순으로 순회하여 최신 게시물이 마지막에 처리되도록 합니다.
     for post in reversed(posts):
+        # 이미지 URL 추출
+        img_url_element = post.select_one('.img-background-wrap.lazy')
+        if not img_url_element:
+            continue
+        img_url = img_url_element['style'].split('url(')[-1].strip(')')
+        
         # 제목 추출
         title_element = post.select_one('.ellipsis-with-reply-cnt')
         if not title_element:
@@ -54,6 +60,7 @@ def check_new_posts_and_log():
             "title": title,
             "description": f"가격: {price_info}",
             "color": 0xFF0000,
+            "image": {"url": img_url},
             "fields": [
                 {
                     "name": "",
