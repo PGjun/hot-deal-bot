@@ -17,9 +17,16 @@ def check_new_posts_and_log():
 
     base_url = "https://quasarzone.com"
     url = f"{base_url}/bbs/qb_saleinfo"
-    response = requests.get(url)
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+    }
+
+    response = requests.get(url, headers=headers)
     if response.status_code != 200:
         print(f"Failed to fetch the webpage: HTTP {response.status_code}")
+        print("Response headers:", response.headers)
+        print("Response body:", response.text)
         return
 
     soup = BeautifulSoup(response.text, 'html.parser')
