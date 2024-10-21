@@ -7,6 +7,9 @@ import time
 DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
 log_file_path = "content_list.txt"
 
+# 제외할 제목 목록
+excluded_titles = ["[네이버페이]"] 
+
 def check_new_posts_and_log():
     known_content = set()
     try:
@@ -46,6 +49,10 @@ def check_new_posts_and_log():
             continue
         title = title_element.text.strip()
 
+        # 제외 목록 검사
+        if any(excluded_title in title for excluded_title in excluded_titles):
+            continue  # 제외할 제목이 포함된 경우 스킵
+        
         # URL 추출
         href_element = post.select_one('.market-info-list-cont .tit a')
         if not href_element or 'href' not in href_element.attrs:
